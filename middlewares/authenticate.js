@@ -11,12 +11,15 @@ const authenticate = async (req, res, next) => {
   const [bearer, token] = authorization.split(" ");
   if (bearer !== "Bearer") {
     next(HttpError(401));
+    return;
   }
+
   try {
     const { id } = jwt.verify(token, SECRET_KEY);
     const user = await User.findById(id);
 
-    if (!user) {
+    console.log(user.token);
+    if (!user || !user.token || user.token !== token) {
       next(HttpError(401));
     }
     req.user = user;
