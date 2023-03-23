@@ -9,6 +9,13 @@ router.post(
   validateBody(schemas.addSchema),
   ctrlWrapper(ctrl.register)
 );
+router.get("/verify/:verificationCode", ctrl.verifyEmail);
+
+router.post(
+  "/verify",
+  validateBody(schemas.emailSchema),
+  ctrl.resendVerifyEmail
+);
 router.post("/login", validateBody(schemas.addSchema), ctrlWrapper(ctrl.login));
 router.post("/current", authenticate, ctrlWrapper(ctrl.getCurrent));
 router.patch(
