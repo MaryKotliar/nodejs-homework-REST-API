@@ -1,6 +1,7 @@
 const { Schema, model } = require("mongoose");
 const { handleMongooseError } = require("../helpers");
 const Joi = require("joi");
+
 const subscriptionVariants = ["starter", "pro", "business"];
 const userSchema = new Schema(
   {
@@ -26,6 +27,14 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationCode: {
+      type: String,
+      default: "",
+    },
   },
   { versionKey: false, timestamps: true }
 );
@@ -40,9 +49,13 @@ const updateSubscriptionSchema = Joi.object({
     .valid(...subscriptionVariants)
     .required(),
 });
+const emailSchema = Joi.object({
+  email: Joi.string().required(),
+});
 const schemas = {
   addSchema,
   updateSubscriptionSchema,
+  emailSchema,
 };
 
 const User = model("user", userSchema);
